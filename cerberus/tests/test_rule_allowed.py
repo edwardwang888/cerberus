@@ -5,9 +5,10 @@ from cerberus.tests import assert_fail, assert_success
 def test_allowed_with_integer_value_fail():
     field = 'a_restricted_integer'
     value = 2
+    allowed_values = [-1, 0, 1]
     assert_fail(
         {field: value},
-        error=(field, (field, 'allowed'), errors.UNALLOWED_VALUE, [-1, 0, 1], value),
+        error=(field, (field, 'allowed'), errors.UNALLOWED_VALUE, allowed_values, (value, allowed_values)),
     )
 
 
@@ -18,14 +19,15 @@ def test_allowed_with_integer_value_succeed():
 def test_allowed_with_list_value():
     field = 'an_array'
     value = ['agent', 'client', 'profit']
+    allowed_values = ['agent', 'client', 'vendor']
     assert_fail(
         {field: value},
         error=(
             field,
             (field, 'allowed'),
             errors.UNALLOWED_VALUES,
-            ['agent', 'client', 'vendor'],
-            (('profit',),),
+            allowed_values,
+            (('profit',), tuple(allowed_values)),
         ),
     )
 
@@ -37,14 +39,15 @@ def test_allowed_with_set_value():
 def test_allowed_with_string_value():
     field = 'a_restricted_string'
     value = 'profit'
+    allowed_values = ['agent', 'client', 'vendor']
     assert_fail(
         {field: value},
         error=(
             field,
             (field, 'allowed'),
             errors.UNALLOWED_VALUE,
-            ['agent', 'client', 'vendor'],
-            value,
+            allowed_values,
+            (value, allowed_values),
         ),
     )
 
@@ -67,7 +70,8 @@ def test_allowed_with_unicode_chars():
 def test_allowed_when_passing_list_of_dicts():
     # https://github.com/pyeve/cerberus/issues/524
     doc = {'letters': [{'some': 'dict'}]}
-    schema = {'letters': {'type': 'list', 'allowed': ['a', 'b', 'c']}}
+    allowed_values = ['a', 'b', 'c']
+    schema = {'letters': {'type': 'list', 'allowed': allowed_values}}
 
     assert_fail(
         doc,
@@ -76,7 +80,7 @@ def test_allowed_when_passing_list_of_dicts():
             'letters',
             ('letters', 'allowed'),
             errors.UNALLOWED_VALUES,
-            ['a', 'b', 'c'],
-            (({'some': 'dict'},),),
+            allowed_values,
+            (({'some': 'dict'},), tuple(allowed_values)),
         ),
     )

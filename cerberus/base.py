@@ -1491,10 +1491,10 @@ class UnconcernedValidator(metaclass=ValidatorMeta):
         if isinstance(value, Iterable) and not isinstance(value, str):
             unallowed = tuple(x for x in value if x not in allowed_values)
             if unallowed:
-                self._error(field, errors.UNALLOWED_VALUES, unallowed)
+                self._error(field, errors.UNALLOWED_VALUES, unallowed, tuple(allowed_values))
         else:
             if value not in allowed_values:
-                self._error(field, errors.UNALLOWED_VALUE, value)
+                self._error(field, errors.UNALLOWED_VALUE, value, allowed_values)
 
     def _validate_check_with(self, checks, field, value):
         """
