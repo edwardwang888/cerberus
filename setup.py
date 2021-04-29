@@ -12,7 +12,7 @@ LONG_DESCRIPTION = open('README.rst').read()
 VERSION = '2.0.dev0'
 
 setup_requires = (
-    ["pytest-runner"] if any(x in sys.argv for x in ("pytest", "test", "ptr")) else []
+    ["pytest-runner", "pytest-benchmark"] if any(x in sys.argv for x in ("pytest", "test", "ptr")) else []
 )
 
 
